@@ -3,12 +3,13 @@ using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
+using System.Threading.Tasks;
 
 namespace Store.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,7 @@ namespace Store.Web
 
            using var Scoope = app.Services.CreateScope();
            var ObjectOfDataSeeding =  Scoope.ServiceProvider.GetRequiredService<IDataSeeding>();
-            ObjectOfDataSeeding.DataSeed();
+          await  ObjectOfDataSeeding.DataSeedAsync();
             #region Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
