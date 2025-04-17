@@ -14,6 +14,8 @@ namespace Persistence.Data.Configrations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
 
+
+
             builder.HasOne(P => P.ProductBrand)
                 .WithMany()
                 .HasForeignKey(p => p.BrandId);
