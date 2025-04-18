@@ -3,6 +3,9 @@ using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
+using Persistence.Repositorice;
+using Service.MappingProfile;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace Store.Web
@@ -23,6 +26,9 @@ namespace Store.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
             #endregion
 
 
