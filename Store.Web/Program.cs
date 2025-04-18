@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repositorice;
+using Service;
 using Service.MappingProfile;
+using ServiceAbstraction;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
@@ -29,6 +31,7 @@ namespace Store.Web
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
+            builder.Services.AddScoped<IServiceManger , ServiceManger>();
             #endregion
 
 
@@ -45,6 +48,7 @@ namespace Store.Web
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
 
 
