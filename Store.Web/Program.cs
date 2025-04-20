@@ -3,12 +3,18 @@ using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
+using Persistence.Repositorice;
+using Service;
+using Service.MappingProfile;
+using ServiceAbstraction;
+using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace Store.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +28,10 @@ namespace Store.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
+            builder.Services.AddScoped<IServiceManger , ServiceManger>();
             #endregion
 
 
@@ -29,7 +39,7 @@ namespace Store.Web
 
            using var Scoope = app.Services.CreateScope();
            var ObjectOfDataSeeding =  Scoope.ServiceProvider.GetRequiredService<IDataSeeding>();
-            ObjectOfDataSeeding.DataSeed();
+          await  ObjectOfDataSeeding.DataSeedAsync();
             #region Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -38,6 +48,7 @@ namespace Store.Web
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
 
 
