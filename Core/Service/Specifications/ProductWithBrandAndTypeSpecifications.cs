@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Models;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,32 @@ namespace Service.Specifications
     internal class ProductWithBrandAndTypeSpecifications : BaseSpecifications<Product ,  int>
     {
         //Get All Product With Brand And Type 
-        public ProductWithBrandAndTypeSpecifications(int? BrandId, int? TypeId)
+        public ProductWithBrandAndTypeSpecifications(int? BrandId, int? TypeId , ProductSortingOptions sortingOption)
             : base(P => (!BrandId.HasValue || P.BrandId == BrandId)
             &&
               (!TypeId.HasValue || P.TypeId == TypeId))
         {
             AddInclode(P => P.ProductBrand);
             AddInclode(P => P.ProductType);
+
+            switch (sortingOption) 
+            {
+                case ProductSortingOptions.NameAsc:
+                    AddOrderBy(P => P.Name);
+                    break;
+                case ProductSortingOptions.NameDesc:
+                    AddOrderByDescending(P => P.Name);
+                    break;
+                case ProductSortingOptions.PriceAsc:
+                    AddOrderBy(P => P.Price);
+                    break;
+                case ProductSortingOptions.PriceDesc:
+                    AddOrderByDescending(P => P.Price);
+                    break;
+                default:
+                    break;
+
+            }
         }
 
         //Get Product By Id
