@@ -37,8 +37,11 @@ namespace Persistence.Repositorice
         return await   SpecificationEvaluator.CreateQurery(_dbContext.Set<TEntity>() , specifications).FirstOrDefaultAsync();
         }
 
+        public async Task<int> CountAsync(ISpecifications<TEntity, Tkey> specifications)
+           => await SpecificationEvaluator.CreateQurery(_dbContext.Set<TEntity>(), specifications).CountAsync();    
+
         #endregion
 
-       
+
     }
 }
