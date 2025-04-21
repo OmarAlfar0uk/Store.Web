@@ -40,6 +40,8 @@ namespace Service.Specifications
                     break;
 
             }
+
+            ApplyPagination(queryParams.PageSize, queryParams.PageSize);
         }
 
         //Get Product By Id
