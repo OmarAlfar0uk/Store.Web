@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DomainLayer.Contracts;
 using DomainLayer.Excptions;
-using DomainLayer.Models;
+using DomainLayer.Models.ProductModels;
 using Service.Specifications;
 using ServiceAbstraction;
 using Shared;
