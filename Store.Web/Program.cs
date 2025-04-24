@@ -1,5 +1,6 @@
 
 using DomainLayer.Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
@@ -7,7 +8,9 @@ using Persistence.Repositorice;
 using Service;
 using Service.MappingProfile;
 using ServiceAbstraction;
+using Shared.ErrorModels;
 using Store.Web.CustomeMiddleWares;
+using Store.Web.Factories;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
@@ -33,6 +36,10 @@ namespace Store.Web
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
             builder.Services.AddScoped<IServiceManger , ServiceManger>();
+            builder.Services.Configure<ApiBehaviorOptions>((Options) =>
+            {
+                Options.InvalidModelStateResponseFactory = ApiResponseFactories.GenerateApiValidationErrorsRespons;
+            });
             #endregion
 
 
