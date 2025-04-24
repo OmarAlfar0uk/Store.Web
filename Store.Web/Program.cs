@@ -10,6 +10,7 @@ using Service.MappingProfile;
 using ServiceAbstraction;
 using Shared.ErrorModels;
 using Store.Web.CustomeMiddleWares;
+using Store.Web.Extensions;
 using Store.Web.Factories;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
@@ -24,37 +25,27 @@ namespace Store.Web
 
             # region services to the container.
             builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+         
 
-            builder.Services.AddDbContext<StoreDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+            builder.Services.AddSwaggerServices();
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
-            builder.Services.AddScoped<IServiceManger , ServiceManger>();
-            builder.Services.Configure<ApiBehaviorOptions>((Options) =>
-            {
-                Options.InvalidModelStateResponseFactory = ApiResponseFactories.GenerateApiValidationErrorsRespons;
-            });
+            builder.Services.AddInfrastructureService(builder.Configuration);
+            builder.Services.AddApplicationServices();
+            builder.Services.AddWebApplicationServices();
             #endregion
 
 
             var app = builder.Build();
 
-           using var Scoope = app.Services.CreateScope();
-           var ObjectOfDataSeeding =  Scoope.ServiceProvider.GetRequiredService<IDataSeeding>();
-          await  ObjectOfDataSeeding.DataSeedAsync();
+            await app.SeedDataBaseAsync();
 
-            app.UseMiddleware<CustomeExceptionHandlerMiddleWares>();
+            app.UseCustomExceptionMiddelWare();
+
             #region Configure the HTTP request pipeline.
+
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddleWear();
             }
 
             app.UseHttpsRedirection();
