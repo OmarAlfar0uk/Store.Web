@@ -3,7 +3,7 @@ using AutoMapper.Execution;
 using AutoMapper.Internal;
 using DomainLayer.Models.ProductModels;
 using Microsoft.Extensions.Configuration;
-using Shared.DataTransferObject;
+using Shared.DataTransferObject.ProductMoodulDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
