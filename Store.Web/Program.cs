@@ -7,6 +7,7 @@ using Persistence.Repositorice;
 using Service;
 using Service.MappingProfile;
 using ServiceAbstraction;
+using Store.Web.CustomeMiddleWares;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
@@ -40,6 +41,8 @@ namespace Store.Web
            using var Scoope = app.Services.CreateScope();
            var ObjectOfDataSeeding =  Scoope.ServiceProvider.GetRequiredService<IDataSeeding>();
           await  ObjectOfDataSeeding.DataSeedAsync();
+
+            app.UseMiddleware<CustomeExceptionHandlerMiddleWares>();
             #region Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
