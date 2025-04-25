@@ -25,7 +25,7 @@ namespace Persistence.Repositorice
                 Query.OrderBy(specifications.OrderBy);
             }
 
-            if (specifications is not null)
+            if (specifications.OrderByDescending is not null)
             {
                 Query.OrderByDescending(specifications.OrderByDescending);  
             }

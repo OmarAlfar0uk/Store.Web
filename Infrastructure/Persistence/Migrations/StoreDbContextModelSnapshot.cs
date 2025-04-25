@@ -7,7 +7,7 @@ using Persistence.Data;
 
 #nullable disable
 
-namespace Persistence.Data.Migrations
+namespace Persistence.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
     partial class StoreDbContextModelSnapshot : ModelSnapshot
@@ -21,7 +21,7 @@ namespace Persistence.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DomainLayer.Models.Product", b =>
+            modelBuilder.Entity("DomainLayer.Models.ProductModels.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,27 +45,21 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductBrandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductBrandId");
+                    b.HasIndex("BrandId");
 
-                    b.HasIndex("ProductTypeId");
+                    b.HasIndex("TypeId");
 
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.ProductBrand", b =>
+            modelBuilder.Entity("DomainLayer.Models.ProductModels.ProductBrand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,7 +76,7 @@ namespace Persistence.Data.Migrations
                     b.ToTable("ProductBrands");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.ProductType", b =>
+            modelBuilder.Entity("DomainLayer.Models.ProductModels.ProductType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,17 +93,17 @@ namespace Persistence.Data.Migrations
                     b.ToTable("productTypes");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.Product", b =>
+            modelBuilder.Entity("DomainLayer.Models.ProductModels.Product", b =>
                 {
-                    b.HasOne("DomainLayer.Models.ProductBrand", "ProductBrand")
+                    b.HasOne("DomainLayer.Models.ProductModels.ProductBrand", "ProductBrand")
                         .WithMany()
-                        .HasForeignKey("ProductBrandId")
+                        .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DomainLayer.Models.ProductType", "ProductType")
+                    b.HasOne("DomainLayer.Models.ProductModels.ProductType", "ProductType")
                         .WithMany()
-                        .HasForeignKey("ProductTypeId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

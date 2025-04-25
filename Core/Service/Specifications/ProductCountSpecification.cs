@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Models.ProductModels;
+using Service.Specifications;
 using Shared;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,11 @@ namespace Service.Specifications
     internal class ProductCountSpecification :  BaseSpecifications<Product , int>
     {
         public ProductCountSpecification(ProductQueryParams queryParams)
-             : base(P => (!queryParams.BrandId.HasValue || P.BrandId == queryParams.BrandId)
-            &&
-              (!queryParams.TypeId.HasValue || P.TypeId == queryParams.TypeId)
-            &&
-            (string.IsNullOrWhiteSpace(queryParams.SearchValue)) || P.Name.ToLower().Contains(queryParams.SearchValue.ToLower()))
+             : base(P => (!queryParams.BrandId.HasValue || (P.BrandId != null && P.BrandId == queryParams.BrandId))
+     &&
+     (!queryParams.TypeId.HasValue || (P.TypeId != null && P.TypeId == queryParams.TypeId))
+     &&
+     (string.IsNullOrWhiteSpace(queryParams.SearchValue) || (P.Name != null && P.Name.ToLower().Contains(queryParams.SearchValue.ToLower()))))
         {
             
         }

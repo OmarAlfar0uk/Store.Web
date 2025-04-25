@@ -40,6 +40,7 @@ namespace Persistence
                     if (ProductTypes is not null && ProductTypes.Any())
                      await   _dbContext.productTypes.AddRangeAsync(ProductTypes);
                 }
+                await _dbContext.SaveChangesAsync();
 
                 if (!_dbContext.Products.Any())
                 {

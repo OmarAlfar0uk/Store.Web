@@ -16,9 +16,14 @@ namespace Persistence
             Services.AddScoped<IDataSeeding, DataSeeding>();
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
             Services.AddScoped<IBasketRepository, BasketRepository>();
+            var configurationOptions = new ConfigurationOptions
+            {
+                EndPoints = { "localhost" },
+                 AbortOnConnectFail = false
+            };
             Services.AddSingleton<IConnectionMultiplexer>( (_) =>
             {
-             return  ConnectionMultiplexer.Connect(Configuration.GetConnectionString("RedisConnectionString"));
+                return  ConnectionMultiplexer.Connect(configurationOptions /*Configuration.GetConnectionString("RedisConnectionString")*/);
             });
 
 
