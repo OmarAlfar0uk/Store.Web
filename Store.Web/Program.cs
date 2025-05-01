@@ -31,6 +31,7 @@ namespace Store.Web
             builder.Services.AddInfrastructureService(builder.Configuration);
             builder.Services.AddApplicationServices();
             builder.Services.AddWebApplicationServices();
+            builder.Services.AddJWTService(builder.Configuration);
             #endregion
 
 
@@ -49,7 +50,9 @@ namespace Store.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization(); 
 
 
             app.MapControllers();

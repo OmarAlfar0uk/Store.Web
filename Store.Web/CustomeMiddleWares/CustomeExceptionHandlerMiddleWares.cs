@@ -10,13 +10,13 @@ namespace Store.Web.CustomeMiddleWares
         private readonly RequestDelegate _next;
         private readonly ILogger<CustomeExceptionHandlerMiddleWares> _logger;
 
-        public CustomeExceptionHandlerMiddleWares(RequestDelegate Next , ILogger<CustomeExceptionHandlerMiddleWares> Logger)
+        public CustomeExceptionHandlerMiddleWares(RequestDelegate Next, ILogger<CustomeExceptionHandlerMiddleWares> Logger)
         {
             _next = Next;
             _logger = Logger;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext) 
+        public async Task InvokeAsync(HttpContext httpContext)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Store.Web.CustomeMiddleWares
             };
 
 
-        
+
             // Return Object as Json 
             await httpContext.Response.WriteAsJsonAsync(Response);
         }

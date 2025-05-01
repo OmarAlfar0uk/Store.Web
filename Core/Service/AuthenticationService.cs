@@ -1,6 +1,8 @@
-﻿using DomainLayer.Excptions;
+﻿using AutoMapper;
+using DomainLayer.Excptions;
 using DomainLayer.Models.IdentityModule;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ServiceAbstraction;
@@ -15,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    internal class AuthenticationService(UserManager<ApplicationUser> _userManager  , IConfiguration _configuration) : IAuthenticationService
+    internal class AuthenticationService(UserManager<ApplicationUser> _userManager, IConfiguration _configuration , IMapper _mapper) : IAuthenticationService
     {
         public async Task<UserDto> LoginAsync(LoginDto loginDto)
         {
@@ -96,5 +98,55 @@ namespace Service
                 throw new BadRequestException(Errors);
             }     
         }
+
+        public async Task<bool> CheckEmailAsync(string email)
+        {
+            var User  =await _userManager.FindByEmailAsync(email);    
+            return User is not null;
+        }
+
+        public async Task<UserDto> GetCreanteUserAsync(string email)
+        {
+            var User =await _userManager.FindByEmailAsync(email) ?? throw new UserNotFoundException(email);
+            return new UserDto() { DisplayName = User.DisplayName, Email = User.Email, Token = await CreateTokenAsync(User) };
+
+        }
+
+        public async Task<AddressDto> GetCreateUserAddressAsync(string email)
+        {
+            var  User =await _userManager.Users.Include(U=>U.Address)
+                .FirstOrDefaultAsync(u => u.Email == email)??throw new UserNotFoundException(email);
+            if (User is not null)
+                return _mapper.Map<Address, AddressDto>(User.Address);
+            else
+                throw new AddressNotFoundException(User.UserName);
+        }
+
+        public async Task<AddressDto> UpdateCreateUserAddressAsync(string email, AddressDto addressDto)
+        {
+            var User = await _userManager.Users.Include(U => U.Address)
+                                         .FirstOrDefaultAsync(u => u.Email == email) ?? throw new UserNotFoundException(email);
+            if(User is not null)    //Update
+            {
+                User.Address.FirstName=addressDto.FirstName;    
+                User.Address.LastName=addressDto.LastName;    
+                User.Address.City=addressDto.City;
+                User.Address.Street=addressDto.Street;
+                User.Address.Country=addressDto.Country;
+                
+                
+            }
+            else //Add New Address
+            {
+                User.Address = _mapper.Map<AddressDto, Address>(addressDto);
+            }
+
+
+            await _userManager.UpdateAsync(User);
+            return _mapper.Map<AddressDto>(User.Address);
+
+        }
+
+
     }
 }
