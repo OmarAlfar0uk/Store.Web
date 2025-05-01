@@ -12,6 +12,7 @@ namespace Store.Web.Extensions
             using var Scoope = app.Services.CreateScope();
             var ObjectOfDataSeeding = Scoope.ServiceProvider.GetRequiredService<IDataSeeding>();
             await ObjectOfDataSeeding.DataSeedAsync();
+            await ObjectOfDataSeeding.IdentityDataSeedAsync();
 
         }
 
