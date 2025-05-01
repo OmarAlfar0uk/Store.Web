@@ -1,4 +1,5 @@
-﻿using DomainLayer.Excptions;
+﻿using Azure;
+using DomainLayer.Excptions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Shared.ErrorModels;
 
@@ -34,13 +35,6 @@ namespace Store.Web.CustomeMiddleWares
 
         private static async Task HandelExceptionAsync(HttpContext httpContext, Exception ex)
         {
-            // Set Status Code For Respons
-
-            httpContext.Response.StatusCode = ex switch
-            {
-                NotFoundException => StatusCodes.Status404NotFound,
-                _ => StatusCodes.Status500InternalServerError
-            };
 
 
             // Set Contant type for Respons
@@ -51,8 +45,27 @@ namespace Store.Web.CustomeMiddleWares
                 StatusCode = httpContext.Response.StatusCode,
                 ErrorMessage = ex.Message
             };
+            // Set Status Code For Respons
+
+            httpContext.Response.StatusCode = ex switch
+            {
+                NotFoundException => StatusCodes.Status404NotFound,
+                UnauthorizedException => StatusCodes.Status401Unauthorized,
+                BadRequestException badRequestException => GetBadRequestErrors(badRequestException, Response),
+                _ => StatusCodes.Status500InternalServerError
+            };
+
+
+        
             // Return Object as Json 
             await httpContext.Response.WriteAsJsonAsync(Response);
+        }
+
+        private static int GetBadRequestErrors(BadRequestException badRequestException, ErrorToReturn response)
+        {
+            response.Errors = badRequestException.Errors;
+            return StatusCodes.Status400BadRequest;
+
         }
 
         private static async Task HandelNotFoundEndPointAsync(HttpContext httpContext)
