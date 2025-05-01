@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persistence
+namespace Persistence.Repositorice
 {
     internal static class SpecificationEvaluator
     {
@@ -25,7 +25,7 @@ namespace Persistence
                 Query.OrderBy(specifications.OrderBy);
             }
 
-            if (specifications is not null)
+            if (specifications.OrderByDescending is not null)
             {
                 Query.OrderByDescending(specifications.OrderByDescending);  
             }
