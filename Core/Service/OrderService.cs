@@ -5,6 +5,7 @@ using DomainLayer.Models.IdentityModule;
 using DomainLayer.Models.OrderModule;
 using DomainLayer.Models.ProductModels;
 using Service.MappingProfile;
+using Service.Specifications.OrderModuleSpecification;
 using ServiceAbstraction;
 using Shared.DataTransferObject.IdentityDTOs;
 using Shared.DataTransferObject.OrderDTOs;
@@ -16,9 +17,23 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    public class OrderService(IMapper _mapper  , IBasketRepository _basketRepository , IUnitOfWork _unitOfWork ) : IOrederService
+    public class OrderService(IMapper _mapper, IBasketRepository _basketRepository, IUnitOfWork _unitOfWork) : IOrederService
     {
-        public async Task<OrderToReturnDTo> CreateOrder(OrderDTo orderDTo, string Email)
+
+        private static OrderItem CreateOrderItem(DomainLayer.Models.BasketModels.BasketItem item, Product Product)
+        {
+            return new OrderItem()
+            {
+                Product = new ProductItemOrder() { ProductId = Product.Id, PictureUrl = Product.PictureUrl, ProductName = Product.Name },
+                Price = Product.Price,
+                Quantity = item.Quantity
+            };
+        }
+
+
+
+
+        public async Task<OrderToReturnDTo> CreateOrderAsync(OrderDTo orderDTo, string Email)
         {
             //mapping address to order address
             var OrderAddress =  _mapper.Map<AddressDto , OrderAddress>(orderDTo.Address);
@@ -49,14 +64,30 @@ namespace Service
             return _mapper.Map<Order , OrderToReturnDTo>(Order);
         }
 
-        private static OrderItem CreateOrderItem(DomainLayer.Models.BasketModels.BasketItem item, Product Product)
+        
+        public async Task<IEnumerable<DeliveryMethodDTo>> GetDeliveryMethodAsync()
         {
-            return new OrderItem()
-            {
-                Product = new ProductItemOrder() { ProductId = Product.Id, PictureUrl = Product.PictureUrl, ProductName = Product.Name },
-                Price = Product.Price,
-                Quantity = item.Quantity
-            };
+            var DeliveryMethods =await _unitOfWork.GetRepository<DeliveryMethod, int>().GetAllAsync();
+            return _mapper.Map<IEnumerable<DeliveryMethod>, IEnumerable<DeliveryMethodDTo>>(DeliveryMethods);
+
+        }
+
+        public async Task<IEnumerable<OrderToReturnDTo>> GetAllOrdersAsync(string Email)
+        {
+            var Spec =  new OrderSpecifications(Email);
+            var Orders =await  _unitOfWork.GetRepository<Order , Guid>().GetAllAsync(Spec);
+            return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderToReturnDTo>>(Orders);
+
+
+        }
+
+        public async Task<OrderToReturnDTo> GetOrderByIdAsync(Guid Id)
+        {
+
+            var Spec = new OrderSpecifications(Id); 
+            var Order =await _unitOfWork.GetRepository<Order , Guid>().GetByIdAsync(Spec);
+            return _mapper.Map<Order, OrderToReturnDTo>(Order);
+
         }
     }
 }
