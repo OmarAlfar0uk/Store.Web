@@ -10,5 +10,8 @@ namespace DomainLayer.Contracts
     {
         
         Task DataSeedAsync();
+
+
+        Task IdentityDataSeedAsync();
     }
 }

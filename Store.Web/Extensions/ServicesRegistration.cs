@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Store.Web.Factories;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Store.Web.Extensions
 {
@@ -20,5 +24,32 @@ namespace Store.Web.Extensions
             });
             return Services;
         }
+
+        public static IServiceCollection AddJWTService(this IServiceCollection Services , IConfiguration configuration) 
+        {
+            Services.AddAuthentication(Config =>
+            {
+                Config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                Config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(Options =>
+            {
+                Options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["JWTOptions:Issuer"],
+
+                    ValidateAudience = true,
+                    ValidAudience = configuration["JWTOptions:Audience"],
+
+                    ValidateLifetime = true,    
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTOptions:SecretKey"]))
+                };
+            });
+
+
+
+            return Services;    
+        }
     }
+
 }
