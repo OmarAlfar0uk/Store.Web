@@ -1,6 +1,6 @@
 ﻿namespace Shared.DataTransferObject.OrderDTOs
 {
-    public class OreserItemDTo
+    public class OrderItemDTo
     {
         public string ProductName { get; set; } = default!;
 

@@ -23,7 +23,7 @@ namespace Shared.DataTransferObject.OrderDTOs
 
         public string OrderStatus { get; set; } = default!;
 
-        public ICollection<OreserItemDTo> Items { get; set; } = [];
+        public ICollection<OrderItemDTo> Items { get; set; } = [];
 
         public decimal SubTotal { get; set; }
 
