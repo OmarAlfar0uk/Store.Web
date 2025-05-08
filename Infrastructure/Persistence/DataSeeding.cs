@@ -21,7 +21,7 @@ namespace Persistence
         RoleManager<IdentityRole> _roleManager , 
         StoreIdentityDbContext _identityDbContext) : IDataSeeding
     { 
-        public async Task DataSeedAsync()
+        public async Task DataSeedAsync() 
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Persistence
 
                 if (!_dbContext.ProductBrands.Any())
                 {
-                    var ProductBrandData =  File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\brands.json");
+                    using var ProductBrandData =  File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\brands.json");
                     var ProductBrands =await JsonSerializer.DeserializeAsync<List<ProductBrand>>(ProductBrandData);
                     if (ProductBrands is not null && ProductBrands.Any())
                      await   _dbContext.ProductBrands.AddRangeAsync(ProductBrands);
@@ -41,7 +41,7 @@ namespace Persistence
 
                 if (!_dbContext.productTypes.Any())
                 {
-                    var ProductTypeData = File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\types.json");
+                    using var ProductTypeData = File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\types.json");
                     var ProductTypes =await JsonSerializer.DeserializeAsync<List<ProductType>>(ProductTypeData);
                     if (ProductTypes is not null && ProductTypes.Any())
                      await   _dbContext.productTypes.AddRangeAsync(ProductTypes);
@@ -50,10 +50,20 @@ namespace Persistence
 
                 if (!_dbContext.Products.Any())
                 {
-                    var ProductData = File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\products.json");
+                    using var ProductData = File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\products.json");
                     var Products =await JsonSerializer.DeserializeAsync<List<Product>>(ProductData);
                     if (Products is not null && Products.Any())
                      await   _dbContext.Products.AddRangeAsync(Products);
+                }
+              await  _dbContext.SaveChangesAsync();
+
+
+                if (!_dbContext.Set<DeliveryMethod>().Any())
+                {
+                    using var DeliveryMethodData = File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\delivery.json");
+                    var DeliveryMethods = await JsonSerializer.DeserializeAsync<List<DeliveryMethod>>(DeliveryMethodData);
+                    if (DeliveryMethods is not null && DeliveryMethods.Any())
+                     await   _dbContext.Set<DeliveryMethod>().AddRangeAsync(DeliveryMethods);
                 }
               await  _dbContext.SaveChangesAsync();
 
