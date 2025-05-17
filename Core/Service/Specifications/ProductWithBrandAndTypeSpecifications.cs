@@ -16,13 +16,13 @@ namespace Service.Specifications
     &&
     (!queryParams.TypeId.HasValue || (P.TypeId != null && P.TypeId == queryParams.TypeId))
     &&
-    (string.IsNullOrWhiteSpace(queryParams.SearchValue) || (P.Name != null && P.Name.ToLower().Contains(queryParams.SearchValue.ToLower()))))
+    (string.IsNullOrWhiteSpace(queryParams.Search) || (P.Name != null && P.Name.ToLower().Contains(queryParams.Search.ToLower()))))
 
         {
             AddInclode(P => P.ProductBrand);
             AddInclode(P => P.ProductType);
 
-            switch (queryParams.sortingOptions) 
+            switch (queryParams.sort) 
             {
                 case ProductSortingOptions.NameAsc:
                     AddOrderBy(P => P.Name);

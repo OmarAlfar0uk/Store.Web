@@ -1,7 +1,10 @@
-﻿namespace Shared.DataTransferObject.OrderDTOs
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace Shared.DataTransferObject.OrderDTOs
 {
     public class OrderItemDTo
     {
+        
         public string ProductName { get; set; } = default!;
 
         public string PictureUrl { get; set; } = default!;

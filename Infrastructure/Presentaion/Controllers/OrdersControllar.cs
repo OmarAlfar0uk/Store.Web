@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Presentaion.Controllers
 {
         [Authorize]
-    public class OrdersControllar(IServiceManger _serviceManger) : ApiBaseConttrolar
+    public class OrdersControllar(IServiceManger _serviceManger) : ApiBaseControlar
     {
         [HttpPost]
         public async Task<ActionResult<OrderToReturnDTo>> CreateOrderAsync(OrderDTo orderDTo)

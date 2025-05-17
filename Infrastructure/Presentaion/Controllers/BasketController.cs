@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Presentaion.Controllers
 {
 
-    public class BasketController(IServiceManger _serviceManger) : ApiBaseConttrolar
+    public class BasketController(IServiceManger _serviceManger) : ApiBaseControlar
     {
         [HttpGet]
 

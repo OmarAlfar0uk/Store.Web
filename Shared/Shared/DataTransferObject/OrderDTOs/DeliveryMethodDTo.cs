@@ -1,4 +1,4 @@
-﻿using System;
+﻿  using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +8,7 @@ namespace Shared.DataTransferObject.OrderDTOs
 {
     public class DeliveryMethodDTo
     {
+        public int Id { get; set; }
         public string ShortName { get; set; } = default!;
 
         public string Description { get; set; } = default!;
@@ -15,6 +16,6 @@ namespace Shared.DataTransferObject.OrderDTOs
 
         public string DeliveryTime { get; set; } = default!;
 
-        public decimal Price { get; set; }
+        public decimal cost { get; set; }
     }
 }

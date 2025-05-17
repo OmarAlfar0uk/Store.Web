@@ -27,7 +27,16 @@ namespace Store.Web
          
 
             builder.Services.AddSwaggerServices();
-
+            builder.Services.AddCors(Options =>
+            {
+                Options.AddPolicy("AllowAll" , builder =>
+                {
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();   
+                    builder.AllowAnyOrigin();
+                    builder.WithOrigins();
+                }); 
+            });
             builder.Services.AddInfrastructureService(builder.Configuration);
             builder.Services.AddApplicationServices();
             builder.Services.AddWebApplicationServices();
@@ -51,6 +60,7 @@ namespace Store.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseAuthorization(); 
 
