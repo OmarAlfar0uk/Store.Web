@@ -15,11 +15,11 @@ namespace Shared
 
         public int? TypeId { get; set; }
 
-        public ProductSortingOptions sortingOptions { get; set; }
+        public ProductSortingOptions sort { get; set; }
 
-        public string? SearchValue { get; set; }
+        public string? Search { get; set; }
 
-        public int PageIndex { get; set; } = 1;
+        public int PageNumber { get; set; } = 1;
 
         private int pageSize = DafaultPageSize;
         public int PageSize

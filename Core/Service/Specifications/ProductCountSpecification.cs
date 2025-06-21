@@ -16,7 +16,7 @@ namespace Service.Specifications
      &&
      (!queryParams.TypeId.HasValue || (P.TypeId != null && P.TypeId == queryParams.TypeId))
      &&
-     (string.IsNullOrWhiteSpace(queryParams.SearchValue) || (P.Name != null && P.Name.ToLower().Contains(queryParams.SearchValue.ToLower()))))
+     (string.IsNullOrWhiteSpace(queryParams.Search) || (P.Name != null && P.Name.ToLower().Contains(queryParams.Search.ToLower()))))
         {
             
         }

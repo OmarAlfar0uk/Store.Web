@@ -11,7 +11,7 @@ namespace Presentaion.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public abstract class ApiBaseConttrolar : ControllerBase
+    public abstract class ApiBaseControlar : ControllerBase
     {
         protected string GetEmailFromToken()=> User.FindFirstValue(ClaimTypes.Email)!;
     }

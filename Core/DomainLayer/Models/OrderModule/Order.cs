@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,18 +14,19 @@ namespace DomainLayer.Models.OrderModule
             
         }
 
-        public Order(string userEmail, OrderAddress address, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal)
+        public Order(string userEmail, OrderAddress address, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal, string paymentIntentId )
         {
-            UserEmail = userEmail;
-            Address = address;
+            buyerEmail = userEmail;
+            shipToAddress = address;
             DeliveryMethod = deliveryMethod;
             Items = items;
             SubTotal = subTotal;
+            PaymentIntentId = paymentIntentId;
         }
 
-        public string UserEmail { get; set; } = default!;
+        public string buyerEmail  { get; set; } = default!;
 
-        public OrderAddress Address { get; set; } = default!;
+        public OrderAddress shipToAddress { get; set; } = default!;
 
         public DeliveryMethod DeliveryMethod { get; set; } = default!;
 
@@ -39,8 +40,9 @@ namespace DomainLayer.Models.OrderModule
 
         public int DeliveryMethodId { get; set; }  //fk
 
-        public OrderStatus OrderStatus { get; set; }
+        public OrderStatus Status { get; set; }
 
         public decimal GetTotal() => SubTotal + DeliveryMethod.Price;
+        public string PaymentIntentId { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Presentaion.Controllers
 {
-    public class AuthenticationControllers(IServiceManger _serviceManger) : ApiBaseConttrolar
+    public class AuthenticationControllers(IServiceManger _serviceManger) : ApiBaseControlar
     {
         [HttpPost("Login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
@@ -27,7 +27,7 @@ namespace Presentaion.Controllers
             return Ok(User);    
         }
 
-        [HttpGet("CheckEmail")]
+        [HttpGet("emailexists")]
         public async Task<ActionResult<bool>> CheakEmailAsync(string Email)
         {
             var Result =await _serviceManger.AuthenticationService.CheckEmailAsync(Email);
