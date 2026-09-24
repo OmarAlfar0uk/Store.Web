@@ -1,138 +1,71 @@
-<div align="center">
+# Store.Web
 
-# 🛍️ Store.Web
-### Enterprise E-Commerce Platform Built with Clean Architecture & Specification Pattern
+![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
+![Entity Framework Core](https://img.shields.io/badge/EF_Core-8.0.15-3FA037?style=for-the-badge&logo=nuget&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
 
-[![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![C#](https://img.shields.io/badge/C%23-12-239120?style=for-the-badge&logo=csharp&logoColor=white)](https://learn.microsoft.com/en-us/dotnet/csharp/)
-[![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%26%20Onion-blue?style=for-the-badge&logo=diagram-project&logoColor=white)](#-system-architecture)
-[![Specification Pattern](https://img.shields.io/badge/Pattern-Specification-orange?style=for-the-badge)](#-architecture-patterns)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellowgreen?style=for-the-badge)](LICENSE)
-[![Author](https://img.shields.io/badge/Author-Omar%20Alfarouk-orange?style=for-the-badge&logo=github&logoColor=white)](https://github.com/OmarAlfar0uk)
+An advanced product catalog and store API leveraging .NET 8 and Clean Architecture/Onion paradigms. The system features a fully decoupled design, comprehensive EF Core initial migrations, and robust JSON-based data seeding capabilities for rapid deployment and testing.
 
-<p align="center">
-  <a href="#-key-features">Key Features</a> •
-  <a href="#-system-architecture">System Architecture</a> •
-  <a href="#-tech-stack">Tech Stack</a> •
-  <a href="#-project-structure">Project Structure</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-author">Author</a>
-</p>
-
-</div>
-
----
-
-## 📌 Executive Overview
-
-**Store.Web** is a high-performance e-commerce backend built with ASP.NET Core, engineered around Clean Architecture and enterprise design patterns. It provides an extensible catalog and inventory system featuring Brands, Categories, and Products with dynamic filtering, sorting, and pagination supported by the **Specification Pattern** and generic repository abstractions.
-
-> [!NOTE]
-> Employs the **Specification Pattern** to encapsulate complex LINQ query logic (sorting, filtering, pagination, and eager loading of navigation properties) cleanly outside repository classes.
-
----
-
-## ✨ Key Features
-
-| ⚡ Feature | 💡 Description | 🛠 Engineering Detail |
-|---|---|---|
-| **📦 Dynamic Product Catalog** | Products categorized by `ProductBrand` and `ProductType` | Entity Framework Core relational mappings with foreign keys |
-| **🔍 Specification Pattern** | Composable querying (search, filter, sort, paginate) | Decouples query logic via `ISpecification<T>` |
-| **🗄️ Generic Repository & UoW** | Reusable data access layer | Centralized repository with Unit of Work pattern |
-| **⚡ High Performance** | Asynchronous queries with projection support | Minimized query overhead and optimized indexing |
-| **🛡️ Layer Isolation** | Clear boundary between Core and Infrastructure | Zero database dependencies in domain models |
-
----
-
-## 🏛 System Architecture
+## 🏗️ Architecture
 
 ```mermaid
-flowchart TD
-    subgraph Web["🌐 Presentation Layer"]
-        Controllers["Controllers (Products, Brands, Types)"]
-    end
-
-    subgraph Service["📐 Application & Service Layer"]
-        ProductSvc["Product Service"]
-        ServiceAbst["Service Abstractions & DTOs"]
-    end
-
-    subgraph Core["🏛️ Core Domain"]
-        Product["Product Entity"]
-        Brand["ProductBrand Entity"]
-        Type["ProductType Entity"]
-        Spec["ISpecification<T>"]
-    end
-
-    subgraph Infra["⚙️ Infrastructure & Persistence"]
-        StoreContext["StoreDbContext"]
-        Repo["Generic Repository & UnitOfWork"]
-        SQL[("SQL Server")]
-    end
-
-    Web --> ServiceAbst
-    Service --> Core
-    Service --> Repo
-    Repo --> StoreContext
-    StoreContext --> SQL
+graph TD
+    P[Infrastructure/Presentation] --> SA[Core/ServiceAbstraction]
+    SA --> D[Core/DomainLayer]
+    S[Core/Service] --> SA
+    S --> D
+    I[Infrastructure/Persistence] --> D
+    I -.-> SD[JSON Data Seeding]
+    H[Store.Web Host] --> P
+    H --> I
+    H --> S
 ```
-
----
-
-## ⚡ Tech Stack
-
-| Category | Technology | Purpose |
-|---|---|---|
-| **Platform** | ![.NET 8](https://img.shields.io/badge/.NET_8-512BD4?style=flat-square&logo=dotnet&logoColor=white) ![C#](https://img.shields.io/badge/C%23_12-239120?style=flat-square&logo=csharp&logoColor=white) | Enterprise Web API framework |
-| **Patterns** | ![Clean Architecture](https://img.shields.io/badge/Clean_Architecture-Onion-00599C?style=flat-square) ![Specification](https://img.shields.io/badge/Pattern-Specification-orange?style=flat-square) | Clean domain modeling and composable query construction |
-| **Data & ORM** | ![EF Core](https://img.shields.io/badge/EF_Core-8.0-512BD4?style=flat-square&logo=dotnet&logoColor=white) ![SQL Server](https://img.shields.io/badge/MS_SQL_Server-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white) | Relational persistence, fluent configurations, and migrations |
-
----
 
 ## 📂 Project Structure
 
-```text
-Store.Web/
-├── Core/
-│   ├── DomainLayer/             # Entities: Product, ProductBrand, ProductType, BaseEntity
-│   ├── Service/                 # Business logic services
-│   └── ServiceAbstraction/      # Service contracts & interfaces
-├── Infrastructure/
-│   ├── Persistence/             # StoreDbContext, Migrations, Repository implementations
-│   └── Presentaion/             # Web API Presentation controllers
-├── Store.Web/                   # Application host, Program.cs & config
-└── Store.Web.sln
-```
+| Layer | Project | Description |
+|---|---|---|
+| **Domain** | `Core/DomainLayer` | Entities (`BaseEntity`, `Product`, `ProductBrand`, `ProductType`) & Contracts (`IDataSeeding`). |
+| **Service Interfaces** | `Core/ServiceAbstraction` | Abstractions referencing the Shared layer. |
+| **Service Implementation** | `Core/Service` | Business logic implementations. |
+| **Data Access** | `Infrastructure/Persistence` | EF Core 8 integrations, `ProductConfigurations`, InitialCreate migrations, and `DataSeed` logic. |
+| **API** | `Infrastructure/Presentaion` | Presentation layer and routing logic. |
+| **Shared** | `Shared/Shared` | Shared types and cross-cutting utilities. |
+| **Host** | `Store.Web` | Startup project including default controllers (`WeatherForecastController`). |
 
----
+## 🌟 Features
+- **JSON Data Seeding:** Ships with pre-configured seed data for `products.json`, `brands.json`, `delivery.json`, and `types.json`.
+- **Domain-Driven Design:** Strong focus on encapsulated core domain entities.
+- **EF Core Migrations:** Fully structured migration histories starting from `InitialCreate`.
 
 ## 🚀 Getting Started
 
-1. **Clone repository:**
-   ```bash
-   git clone https://github.com/OmarAlfar0uk/Store.Web.git
-   cd Store.Web
-   ```
+### Prerequisites
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- SQL Server
 
-2. **Build & Run:**
-   ```bash
-   dotnet restore
-   dotnet run --project Store.Web
-   ```
+### Installation & Execution
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/OmarAlfar0uk/Store.Web.git
+
+# 2. Navigate to the project root
+cd Store.Web
+
+# 3. Restore dependencies
+dotnet restore
+
+# 4. Run the application
+dotnet run --project Store.Web
+```
 
 ---
 
 ## 👨‍💻 Author
 
-**Omar Alfarouk**  
-*Full-Stack .NET & Software Engineer*  
-
-- 🌐 **GitHub:** [@OmarAlfar0uk](https://github.com/OmarAlfar0uk)
-- 💼 **LinkedIn:** [omar-alfarouk](https://www.linkedin.com/in/omar-alfarouk-252471251/)
-- 📧 **Email:** [omaralfarouk646@gmail.com](mailto:omaralfarouk646@gmail.com)
-
----
-
-<div align="center">
-  <sub>Built with ❤️ by Omar Alfarouk. Licensed under the <a href="LICENSE">MIT License</a>.</sub>
-</div>
+**Omar Alfarouk**
+- GitHub: [OmarAlfar0uk](https://github.com/OmarAlfar0uk)
+- LinkedIn: [omar-alfarouk-252471251](https://www.linkedin.com/in/omar-alfarouk-252471251/)
+- Email: [omaralfarouk646@gmail.com](mailto:omaralfarouk646@gmail.com)
