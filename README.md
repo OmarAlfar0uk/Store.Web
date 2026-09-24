@@ -114,12 +114,9 @@ Store.Web/
    cd Store.Web
    ```
 
-2. **Configure Connection:**
-   Update `Store.Web/appsettings.json` with your database connection.
-
-3. **Update Database & Run:**
+2. **Build & Run:**
    ```bash
-   dotnet ef database update --project Infrastructure/Persistence --startup-project Store.Web
+   dotnet restore
    dotnet run --project Store.Web
    ```
 
